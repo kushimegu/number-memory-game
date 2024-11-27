@@ -25,7 +25,7 @@ async function selectStage() {
 
 // Ready, Startを表示
 async function countDown() {
-  await delay(500)
+  await delay(500);
   process.stdout.write("Ready");
   await clearLineAfterDelay(1000);
   await delay(500);
@@ -73,9 +73,14 @@ async function judgeAnswer(numbers, answer) {
     console.log("Correct!");
     return true;
   } else {
-    console.log("Wrong");
+    console.log("Incorrect");
     return false;
   }
+}
+
+// 正解の表示
+function displayCorrectAnswer(numbers) {
+  console.log(`The answer was ${numbers.join("")}`);
 }
 // 正誤判定で2回間違えたら終了
 // async function judgeContinue(judgement) {
@@ -113,11 +118,14 @@ async function execute() {
     const answer = await receiveAnswer();
     const correct = await judgeAnswer(numbers, answer);
     if (correct === false) {
+      displayCorrectAnswer(numbers);
       break;
     }
+    if (i < 9){
     await delay(500);
     process.stdout.write("Next");
     await clearLineAfterDelay(1000);
+    }
   }
   if (i === 4) {
     console.log(
@@ -125,7 +133,7 @@ async function execute() {
     );
   } else {
     console.log(
-      `You remembered order of ${i - 1} numbers! Your rank is ${ranking(i)}`
+      `You remembered order of ${i - 1} numbers! Your rank is ${ranking(i - 1)}`
     );
   }
 }
