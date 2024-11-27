@@ -50,11 +50,28 @@ export class Game {
     return response;
   }
 
-  async start() {
-    console.log(
-      "Starting from the number of digits you chose, digits will be shown for 1 seconds each.\nAnswer the number in order for Forward Stage, in reverse order for Backward Stage."
-    );
+  ranking(digits) {
+    let rank;
+    if (digits < 5) {
+      rank = "D";
+    } else if (digits === 5) {
+      rank = "C";
+    } else if (digits === 6) {
+      rank = "B";
+    } else if (digits === 7) {
+      rank = "A";
+    } else if (digits === 8) {
+      rank = "S";
+    } else if (digits === 9) {
+      rank = "SS";
+    }
+    return rank;
+  }
 
+  async start() {
+    console.log(`Starting from the level (number of digits) you choose, digits will be shown for 1 seconds each.
+Answer the number in order for Forward Stage, in reverse order for Backward Stage.
+Answer correctly and you can challenge the next level until the last level with 9 digits. Good luck!`);
     const selectedStage = await this.selectStage();
     this.stage =
       selectedStage === "Forward" ? new ForwardStage() : new BackwardStage();
@@ -75,6 +92,6 @@ export class Game {
         await Utils.clearLineAfterDelay(1000);
       }
     }
-    console.log(`Your rank is ${this.stage.ranking(i - 1)}`);
+    console.log(`Your rank is ${this.ranking(i - 1)}`);
   }
 }
