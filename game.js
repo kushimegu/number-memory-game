@@ -9,12 +9,21 @@ export class Game {
   constructor() {
     this.stage = null;
   }
-  
+
   async selectStage() {
     const { Select } = pkg;
     const prompt = new Select({
       message: "Pick a stage",
       choices: ["Forward", "Backward"],
+    });
+    return await prompt.run();
+  }
+
+  async selectLevel() {
+    const { Select } = pkg;
+    const prompt = new Select({
+      message: "Pick a number of digits you want to start with",
+      choices: ["3", "4", "5"],
     });
     return await prompt.run();
   }
@@ -42,11 +51,16 @@ export class Game {
   }
 
   async start() {
+    console.log(
+      "Starting from the number of digits you chose, digits will be shown for 1 seconds each.\nAnswer the number in order for Forward Stage, in reverse order for Backward Stage."
+    );
+
     const selectedStage = await this.selectStage();
     this.stage =
       selectedStage === "Forward" ? new ForwardStage() : new BackwardStage();
+    const digits = parseInt(await this.selectLevel());
     let i;
-    for (i = 4; i < 10; i++) {
+    for (i = digits; i < 10; i++) {
       await Utils.countDown();
       const numbers = await this.displayNumbers(i);
       const answer = await this.receiveAnswer();
@@ -61,18 +75,6 @@ export class Game {
         await Utils.clearLineAfterDelay(1000);
       }
     }
-    if (i === 4) {
-      console.log(
-        `You couldn't remember order of 4 numbers. Your rank is ${this.stage.ranking(
-          i
-        )}`
-      );
-    } else {
-      console.log(
-        `You remembered order of ${
-          i - 1
-        } numbers! Your rank is ${this.stage.ranking(i - 1)}`
-      );
-    }
+    console.log(`Your rank is ${this.stage.ranking(i - 1)}`);
   }
 }
