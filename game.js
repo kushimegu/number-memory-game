@@ -2,7 +2,6 @@ import readline from "node:readline";
 import process from "node:process";
 import pkg from "enquirer";
 
-import { Utils } from "./utils.js";
 import { ForwardStage } from "./forward_stage.js";
 import { BackwardStage } from "./backward_stage.js";
 
@@ -21,7 +20,7 @@ export class Game {
     readline.clearLine(process.stdout, 0);
   }
 
-  async countDown(){
+  async countDown() {
     await this.delay(500);
     process.stdout.write("Ready");
     await this.clearLineAfterDelay(1000);
@@ -43,7 +42,7 @@ export class Game {
   async selectLevel() {
     const { Select } = pkg;
     const prompt = new Select({
-      message: "Pick a number of digits you want to start with",
+      message: "Pick a number of digits to start with",
       choices: ["3", "4", "5"],
     });
     return await prompt.run();
@@ -56,15 +55,15 @@ export class Game {
     }
     return numbers;
   }
-  
+
   async displayNumbers(digits) {
-    let numbers = Utils.generateRandomNumbers(digits);
+    let numbers = this.generateRandomNumbers(digits);
     console.log(numbers);
     for (let i = 0; i < digits; i++) {
       let number = numbers[i];
       process.stdout.write(number.toString());
-      await Utils.clearLineAfterDelay(1000);
-      await Utils.delay(500);
+      await this.clearLineAfterDelay(1000);
+      await this.delay(500);
     }
     return numbers;
   }
@@ -77,6 +76,15 @@ export class Game {
       message: "Answer?",
     });
     return response;
+  }
+
+  async selectToChallenge() {
+    const { Select } = pkg;
+    const prompt = new Select({
+      message: "Challenge the next level?",
+      choices: ["Yes", "No"],
+    });
+    return await prompt.run();
   }
 
   ranking(digits) {
@@ -107,7 +115,7 @@ Answer correctly and you can challenge the next level until the last level with 
     const digits = parseInt(await this.selectLevel());
     let i;
     for (i = digits; i < 10; i++) {
-      await Utils.countDown();
+      await this.countDown();
       const numbers = await this.displayNumbers(i);
       const answer = await this.receiveAnswer();
       const correct = await this.stage.judgeAnswer(numbers, answer);
@@ -116,9 +124,10 @@ Answer correctly and you can challenge the next level until the last level with 
         break;
       }
       if (i < 9) {
-        await Utils.delay(500);
-        process.stdout.write("Next");
-        await Utils.clearLineAfterDelay(1000);
+        const turnToNextLevel = await this.selectToChallenge();
+        if (turnToNextLevel === "No") {
+          break;
+        }
       }
     }
     console.log(`Your rank is ${this.ranking(i - 1)}`);
