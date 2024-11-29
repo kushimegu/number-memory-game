@@ -43,7 +43,7 @@ export class Game {
     const { Select } = pkg;
     const prompt = new Select({
       message: "Pick a number of digits to start with",
-      choices: ["3", "4", "5"],
+      choices: ["1", "3", "4", "5"],
     });
     return await prompt.run();
   }
@@ -76,6 +76,15 @@ export class Game {
       message: "Answer?",
     });
     return response;
+  }
+
+  async selectToTryAgain() {
+    const { Select } = pkg;
+    const prompt = new Select({
+      message: "Try the same level again?",
+      choices: ["Yes", "No"],
+    });
+    return await prompt.run();
   }
 
   async selectToChallenge() {
@@ -114,14 +123,27 @@ Answer correctly and you can challenge the next level until the last level with 
       selectedStage === "Forward" ? new ForwardStage() : new BackwardStage();
     const digits = parseInt(await this.selectLevel());
     let i;
-    for (i = digits; i < 10; i++) {
-      await this.countDown();
-      const numbers = await this.displayNumbers(i);
-      const answer = await this.receiveAnswer();
-      const correct = await this.stage.judgeAnswer(numbers, answer);
-      if (correct === false) {
-        this.stage.displayCorrectAnswer(numbers);
-        break;
+    let countFailure = 0;
+    level: for (i = digits; i < 10; i++) {
+      for (let j = 1; j < 3; j++) {
+        await this.countDown();
+        const numbers = await this.displayNumbers(i);
+        const answer = await this.receiveAnswer();
+        const correct = await this.stage.judgeAnswer(numbers, answer);
+        if (correct === false) {
+          this.stage.displayCorrectAnswer(numbers);
+          countFailure += 1;
+          if (countFailure === 1) {
+            const tryAgain = await this.selectToTryAgain();
+            if (tryAgain === "No") {
+              break level;
+            }
+          } else if (countFailure === 2) {
+            break level;
+          }
+        } else {
+          break;
+        }
       }
       if (i < 9) {
         const turnToNextLevel = await this.selectToChallenge();
