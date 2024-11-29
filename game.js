@@ -1,3 +1,4 @@
+import readline from "node:readline";
 import process from "node:process";
 import pkg from "enquirer";
 
@@ -8,6 +9,26 @@ import { BackwardStage } from "./backward_stage.js";
 export class Game {
   constructor() {
     this.stage = null;
+  }
+
+  delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+
+  async clearLineAfterDelay(ms) {
+    await this.delay(ms);
+    readline.cursorTo(process.stdout, 0);
+    readline.clearLine(process.stdout, 0);
+  }
+
+  async countDown(){
+    await this.delay(500);
+    process.stdout.write("Ready");
+    await this.clearLineAfterDelay(1000);
+    await this.delay(500);
+    process.stdout.write("Start");
+    await this.clearLineAfterDelay(1000);
+    await this.delay(500);
   }
 
   async selectStage() {
@@ -28,6 +49,14 @@ export class Game {
     return await prompt.run();
   }
 
+  generateRandomNumbers(length) {
+    let numbers = [];
+    for (let i = 1; i < length + 1; i++) {
+      numbers.push(Math.floor(Math.random() * 9));
+    }
+    return numbers;
+  }
+  
   async displayNumbers(digits) {
     let numbers = Utils.generateRandomNumbers(digits);
     console.log(numbers);
