@@ -134,6 +134,7 @@ Answer correctly and you can challenge the next level until the last level with 
           this.stage.displayCorrectAnswer(numbers);
           countFailure += 1;
           if (countFailure === 1) {
+            console.log("One chance remaining.");
             const tryAgain = await this.selectToTryAgain();
             if (tryAgain === "No") {
               break level;
@@ -146,12 +147,17 @@ Answer correctly and you can challenge the next level until the last level with 
         }
       }
       if (i < 9) {
+        if (countFailure === 0) {
+          console.log("Two chances remaining.");
+        } else {
+          console.log("One chance remaining.");
+        }
         const turnToNextLevel = await this.selectToChallenge();
         if (turnToNextLevel === "No") {
           break;
         }
       }
     }
-    console.log(`Your rank is ${this.ranking(i - 1)}`);
+    console.log(`Your rank is ${this.ranking(i - 1)}.`);
   }
 }

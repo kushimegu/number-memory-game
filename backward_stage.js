@@ -1,16 +1,17 @@
+import process from "node:process"
+
 export class BackwardStage {
   async judgeAnswer(numbers, answer) {
     if (numbers.toReversed().join("") === answer.answer) {
-      console.log("Correct!");
+      process.stdout.write("Correct! ");
       return true;
     } else {
-      console.log("Incorrect");
+      process.stdout.write("Incorrect. ");
       return false;
     }
   }
 
   displayCorrectAnswer(numbers) {
-    console.log(numbers)
     console.log(`The answer was ${numbers.toReversed().join("")}`);
   }
 }
