@@ -1,6 +1,6 @@
 import process from "node:process"
 
-export class ForwardStage{
+export default class ForwardStage{
   async judgeAnswer(numbers, answer) {
     if (numbers.join("") === answer.answer) {
       process.stdout.write("Correct! ");

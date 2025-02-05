@@ -1,11 +1,11 @@
 import readline from "node:readline";
 import process from "node:process";
-import pkg from "enquirer";
+import enquirer from "enquirer";
 
 import { ForwardStage } from "./forward_stage.js";
 import { BackwardStage } from "./backward_stage.js";
 
-export class Game {
+export default class Game {
   constructor() {
     this.stage = null;
   }
@@ -31,8 +31,7 @@ export class Game {
   }
 
   async selectStage() {
-    const { Select } = pkg;
-    const prompt = new Select({
+    const prompt = new enquirer.Select({
       message: "Pick a stage",
       choices: ["Forward", "Backward"],
     });
@@ -40,10 +39,9 @@ export class Game {
   }
 
   async selectLevel() {
-    const { Select } = pkg;
-    const prompt = new Select({
+    const prompt = new enquirer.Select({
       message: "Pick a number of digits to start with",
-      choices: ["1", "3", "4", "5"],
+      choices: ["4", "5", "6"],
     });
     return await prompt.run();
   }
@@ -58,7 +56,7 @@ export class Game {
 
   async displayNumbers(digits) {
     let numbers = this.generateRandomNumbers(digits);
-    console.log(numbers);
+    // console.log(numbers);
     for (let i = 0; i < digits; i++) {
       let number = numbers[i];
       process.stdout.write(number.toString());
@@ -69,8 +67,7 @@ export class Game {
   }
 
   async receiveAnswer() {
-    const { prompt } = pkg;
-    const response = await prompt({
+    const response = await enquirer.prompt({
       type: "input",
       name: "answer",
       message: "Answer?",
@@ -79,8 +76,7 @@ export class Game {
   }
 
   async selectToTryAgain() {
-    const { Select } = pkg;
-    const prompt = new Select({
+    const prompt = new enquirer.Select({
       message: "Try the same level again?",
       choices: ["Yes", "No"],
     });
@@ -88,8 +84,7 @@ export class Game {
   }
 
   async selectToChallenge() {
-    const { Select } = pkg;
-    const prompt = new Select({
+    const prompt = new enquirer.Select({
       message: "Challenge the next level?",
       choices: ["Yes", "No"],
     });
@@ -117,7 +112,7 @@ export class Game {
   async start() {
     console.log(`Starting from the level (number of digits) you choose, digits will be shown for 1 seconds each.
 Answer the number in order for Forward Stage, in reverse order for Backward Stage.
-Answer correctly and you can challenge the next level until the last level with 9 digits. Good luck!`);
+Answer correctly and you can challenge the next level until you fail twice or reach the last level with 9 digits.`);
     const selectedStage = await this.selectStage();
     this.stage =
       selectedStage === "Forward" ? new ForwardStage() : new BackwardStage();
@@ -134,7 +129,7 @@ Answer correctly and you can challenge the next level until the last level with 
           this.stage.displayCorrectAnswer(numbers);
           countFailure += 1;
           if (countFailure === 1) {
-            console.log("One chance remaining.");
+            console.log("One more chance remaining.");
             const tryAgain = await this.selectToTryAgain();
             if (tryAgain === "No") {
               break level;
@@ -148,9 +143,9 @@ Answer correctly and you can challenge the next level until the last level with 
       }
       if (i < 9) {
         if (countFailure === 0) {
-          console.log("Two chances remaining.");
+          console.log("Two more chances remaining.");
         } else {
-          console.log("One chance remaining.");
+          console.log("One more chance remaining.");
         }
         const turnToNextLevel = await this.selectToChallenge();
         if (turnToNextLevel === "No") {

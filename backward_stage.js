@@ -1,6 +1,6 @@
 import process from "node:process"
 
-export class BackwardStage {
+export default class BackwardStage {
   async judgeAnswer(numbers, answer) {
     if (numbers.toReversed().join("") === answer.answer) {
       process.stdout.write("Correct! ");
