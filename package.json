@@ -1,6 +1,6 @@
 {
   "name": "number-memory-game",
-  "version": "1.0.1-develop",
+  "version": "1.0.1",
   "bin": {
     "number-memory-game": "/src/game.js"
   },
