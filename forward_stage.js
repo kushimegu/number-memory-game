@@ -1,8 +1,8 @@
 import process from "node:process"
 
 export default class ForwardStage{
-  async judgeAnswer(numbers, answer) {
-    if (numbers.join("") === answer.answer) {
+  async judgeAnswer(numbers, response) {
+    if (numbers.join("") === response.answer) {
       process.stdout.write("Correct! ");
       return true;
     } else {
