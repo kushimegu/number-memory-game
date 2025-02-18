@@ -46,9 +46,7 @@ Your rank will be shown after you finish the game.`);
         }
       }
       if (i < 9) {
-        if (failureCount === 0) {
-          console.log("Two more chances remaining.");
-        } else {
+        if (failureCount === 1) {
           console.log("One more chance remaining.");
         }
         const turnToNextLevel = await this.#selectToChallenge();
