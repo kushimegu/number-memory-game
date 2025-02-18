@@ -55,7 +55,7 @@ Your rank will be shown after you finish the game.`);
         }
       }
     }
-    console.log(`Your rank is ${this.#ranking(i - 1)}.`);
+    console.log(`Your rank is ${this.#getRank(i - 1)}.`);
   }
 
   async #selectStage() {
@@ -138,21 +138,8 @@ Your rank will be shown after you finish the game.`);
     return await prompt.run();
   }
 
-  #ranking(digits) {
-    let rank;
-    if (digits < 5) {
-      rank = "D";
-    } else if (digits === 5) {
-      rank = "C";
-    } else if (digits === 6) {
-      rank = "B";
-    } else if (digits === 7) {
-      rank = "A";
-    } else if (digits === 8) {
-      rank = "S";
-    } else if (digits === 9) {
-      rank = "SS";
-    }
-    return rank;
+  #getRank(digits) {
+    const ranks = { 5: "C", 6: "B", 7: "A", 8: "S", 9: "SS" };
+    return ranks[digits] || "D";
   }
 }
