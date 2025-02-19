@@ -1,0 +1,31 @@
+{
+  "name": "number-memory-game",
+  "version": "1.0.5",
+  "bin": {
+    "number-memory-game": "/src/memory_game.js"
+  },
+  "main": "main.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "enquirer": "^2.4.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.19.0",
+    "eslint": "^9.19.0",
+    "globals": "^15.14.0"
+  },
+  "keywords": [
+    "memory-game",
+    "digit-span"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kushimegu/number-memory-game"
+  }
+}
